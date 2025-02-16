@@ -1,12 +1,19 @@
+# create key_pair based on my public key to ssh web_ec2_public_subnet_1 and web_ec2_public_subnet_2
+resource "aws_key_pair" "key_pair" {
+  key_name   = "key_pair"
+  public_key = file("~/.ssh/id_rsa_pub")
+}
+
 # create ec2 in public_subnet_1 
 resource "aws_instance" "web_ec2_public_subnet_1" {
-  ami                    = "ami"
+  ami                    = "ami-"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_1.id
   vpc_security_group_ids = [aws_security_group.ec2_sec_group.id] # associate the ec2_sec_group to web_ec2_public_subnet_1
+  key_name               = aws_key_pair.key_pair.key_name
 
   tags = {
-    Name = "web app"
+    Name = "web app public_subnet_1"
   }
 }
 
@@ -38,37 +45,38 @@ resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
 
 # create ec2 in public_subnet_2
 resource "aws_instance" "web_ec2_public_subnet_2" {
-  ami                    = "ami"
+  ami                    = "ami-"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.public_subnet_2.id
   vpc_security_group_ids = [aws_security_group.ec2_sec_group.id] # associate the ec2_sec_group to web_ec2_public_subnet_2
+  key_name               = aws_key_pair.key_pair.key_name
 
 
   tags = {
-    Name = "web app"
+    Name = "web app public_subnet_2"
   }
 }
 
 # create ec2 in private_subnet_1 
 resource "aws_instance" "db_private_subnet_1" {
-  ami                    = "ami"
+  ami                    = "ami-"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private_subnet_1
   vpc_security_group_ids = [aws_security_group.ec2_sec_group.id] # associate the ec2_sec_group to db_private_subnet_1
 
   tags = {
-    Name = "db"
+    Name = "db private_subnet_1"
   }
 }
 
 # create ec2 in private_subnet_2
 resource "aws_instance" "db_private_subnet_2" {
-  ami                    = "ami"
+  ami                    = "ami-"
   instance_type          = "t2.micro"
   subnet_id              = aws_subnet.private_subnet_2.id
   vpc_security_group_ids = [aws_security_group.ec2_sec_group.id] # associate the ec2_sec_group to db_private_subnet_2
 
   tags = {
-    Name = "db"
+    Name = "db private_subnet_2"
   }
 }
